@@ -42,6 +42,7 @@ export default function Topbar() {
 
   return (
     <header className="topbar">
+      <div className="topbar-inner">
       <div className="search">
         <span className="search-ico">⌕</span>
         <input
@@ -92,6 +93,7 @@ export default function Topbar() {
         >
           {state.theme === "dark" ? "☀" : "☾"}
         </button>
+      </div>
       </div>
     </header>
   );
