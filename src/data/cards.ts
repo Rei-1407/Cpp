@@ -1,0 +1,361 @@
+// Flashcards power the "Ôn tập hàng ngày" (daily review / spaced repetition).
+// These recycle the key ideas from the reference doc so you keep them fresh.
+//
+// To add your own: append objects below. `sectionId` links the card back to a
+// lesson (same id the parser assigns, e.g. "9" for section 9, "a" for appendix A).
+// `front`/`back` accept inline markdown (backticks for `code`). Use `code` for a
+// full C++ snippet rendered as a highlighted block.
+
+export interface Flashcard {
+  id: string;
+  sectionId: string;
+  front: string;
+  back: string;
+  code?: string;
+  tag?: string;
+}
+
+export const cards: Flashcard[] = [
+  // ---- Part I: Foundations ----
+  {
+    id: "c-compile-model",
+    sectionId: "1",
+    tag: "Compilation",
+    front: "Ba giai đoạn của pipeline biên dịch C++ là gì?",
+    back: "**Preprocessor** (xử lý `#include`/`#define` — thao tác text) → **Compiler** (mỗi `.cpp` = 1 translation unit → object file) → **Linker** (ghép object + thư viện → executable).",
+  },
+  {
+    id: "c-compiler-vs-linker",
+    sectionId: "1",
+    tag: "Compilation",
+    front: "Phân biệt nhanh lỗi compiler vs lỗi linker?",
+    back: "*'undeclared identifier', 'syntax error'* → lỗi **compiler** (sai trong 1 file). *'unresolved external symbol', 'duplicate symbol'* → lỗi **linker** (vấn đề khi ghép nhiều file).",
+  },
+  {
+    id: "c-zero-overhead",
+    sectionId: "1",
+    tag: "Triết lý",
+    front: "'Zero-overhead abstraction' nghĩa là gì?",
+    back: "\"Bạn không trả giá cho thứ bạn không dùng.\" Abstraction (class, template) được compiler dịch ra code gần như tối ưu bằng tay — không tốn chi phí runtime thừa.",
+  },
+  {
+    id: "c-header-source",
+    sectionId: "2",
+    tag: "Tổ chức code",
+    front: "Vì sao C++ tách `.h` (header) khỏi `.cpp` (source)?",
+    back: "Tách **interface** (khai báo, include nhiều nơi) khỏi **implementation** (định nghĩa, biên dịch 1 lần). Giúp giảm thời gian build và tránh định nghĩa trùng.",
+  },
+  {
+    id: "c-include-guard",
+    sectionId: "2",
+    tag: "Preprocessor",
+    front: "`#pragma once` dùng để làm gì?",
+    back: "Include guard hiện đại — ngăn 1 header bị include 2 lần trong cùng translation unit (tránh lỗi *redefinition*). Cách truyền thống là `#ifndef / #define / #endif`.",
+  },
+  {
+    id: "c-int-ref-ptr",
+    sectionId: "6",
+    tag: "Con trỏ",
+    front: "Khác biệt cốt lõi giữa reference (`&`) và pointer (`*`)?",
+    back: "**Reference**: bí danh cho 1 biến có sẵn, phải khởi tạo ngay, không đổi target, không null. **Pointer**: lưu địa chỉ, có thể null, đổi target, cần `*` để deref.",
+    code: "int x = 5;\nint& ref = x;   // bí danh của x\nint* ptr = &x;  // giữ địa chỉ của x\n*ptr = 10;      // đổi x qua con trỏ",
+  },
+  {
+    id: "c-nullptr",
+    sectionId: "6",
+    tag: "Con trỏ",
+    front: "Vì sao dùng `nullptr` thay cho `NULL` hay `0`?",
+    back: "`nullptr` có kiểu riêng (`std::nullptr_t`), tránh nhập nhằng khi overload giữa con trỏ và số nguyên. `NULL`/`0` có thể bị hiểu nhầm là `int`.",
+  },
+
+  // ---- Part II: Memory ----
+  {
+    id: "c-stack-heap",
+    sectionId: "7",
+    tag: "Bộ nhớ",
+    front: "Stack vs Heap khác nhau thế nào?",
+    back: "**Stack**: tự động, nhanh, vòng đời theo scope, dung lượng nhỏ. **Heap**: cấp phát thủ công (`new`/`delete` hoặc smart pointer), linh hoạt, lớn, chậm hơn và dễ rò rỉ nếu quên giải phóng.",
+  },
+  {
+    id: "c-new-delete",
+    sectionId: "8",
+    tag: "Bộ nhớ",
+    front: "Quy tắc ghép đôi của `new`/`new[]`?",
+    back: "`new` ↔ `delete`, `new[]` ↔ `delete[]`. Trộn lẫn (vd `new[]` rồi `delete`) là **undefined behavior**. Tốt nhất: tránh dùng trực tiếp, ưu tiên smart pointer/container.",
+  },
+  {
+    id: "c-raii",
+    sectionId: "9",
+    tag: "RAII",
+    front: "RAII là gì và vì sao là 'nguyên lý vàng' của C++?",
+    back: "**Resource Acquisition Is Initialization**: gắn vòng đời tài nguyên (memory, file, lock…) vào vòng đời object. Constructor giành tài nguyên, destructor trả lại → tự động, an toàn cả khi có exception.",
+  },
+  {
+    id: "c-unique-vs-shared",
+    sectionId: "10",
+    tag: "Smart pointer",
+    front: "Khi nào dùng `unique_ptr` vs `shared_ptr`?",
+    back: "**`unique_ptr`**: sở hữu độc quyền (1 owner), zero-overhead — mặc định nên dùng. **`shared_ptr`**: sở hữu chung qua đếm tham chiếu (ref count), tốn chi phí — chỉ dùng khi thực sự cần nhiều owner.",
+  },
+  {
+    id: "c-make-unique",
+    sectionId: "10",
+    tag: "Smart pointer",
+    front: "Tạo smart pointer đúng cách?",
+    back: "Ưu tiên `std::make_unique<T>(args)` và `std::make_shared<T>(args)` thay vì `new`. An toàn exception hơn và (với shared) cấp phát gộp control block.",
+    code: "auto p = std::make_unique<Player>(100);\nauto s = std::make_shared<Texture>(\"hero.png\");",
+  },
+  {
+    id: "c-weak-ptr",
+    sectionId: "10",
+    tag: "Smart pointer",
+    front: "`weak_ptr` giải quyết vấn đề gì?",
+    back: "Phá vỡ **vòng tham chiếu (cycle)** của `shared_ptr` (A giữ B, B giữ A → không bao giờ giải phóng). `weak_ptr` không tăng ref count; gọi `.lock()` để lấy `shared_ptr` khi cần.",
+  },
+  {
+    id: "c-move-semantics",
+    sectionId: "11",
+    tag: "Move",
+    front: "Move semantics tối ưu điều gì?",
+    back: "Thay vì **copy** (sao chép toàn bộ tài nguyên), **move** chuyển nhượng quyền sở hữu (vd con trỏ nội bộ) từ object tạm → object mới, rồi để nguồn ở trạng thái rỗng hợp lệ. Rẻ hơn nhiều.",
+  },
+  {
+    id: "c-std-move",
+    sectionId: "11",
+    tag: "Move",
+    front: "`std::move(x)` thực sự làm gì?",
+    back: "Không di chuyển gì cả! Nó chỉ **ép kiểu** `x` thành rvalue reference để chọn được move constructor/assignment. Sau khi move, `x` ở trạng thái 'valid but unspecified'.",
+  },
+
+  // ---- Part III: OOP ----
+  {
+    id: "c-rule-of-5",
+    sectionId: "13",
+    tag: "OOP",
+    front: "Rule of 0 / 3 / 5 nói gì?",
+    back: "**Rule of 0**: để compiler tự sinh — ưu tiên. **Rule of 3**: nếu cần 1 trong {destructor, copy ctor, copy assign} thì thường cần cả 3. **Rule of 5**: thêm move ctor & move assign cho hiệu năng.",
+  },
+  {
+    id: "c-member-init-list",
+    sectionId: "13",
+    tag: "OOP",
+    front: "Vì sao nên dùng member initializer list?",
+    back: "Khởi tạo trực tiếp trong list (`: value(x)`) thay vì gán trong thân constructor — tránh khởi tạo mặc định rồi gán lại (2 bước), và bắt buộc với `const`/reference member.",
+    code: "Foo(int x) : value(x) {}   // init list, 1 bước",
+  },
+  {
+    id: "c-virtual-dtor",
+    sectionId: "15",
+    tag: "OOP",
+    front: "Vì sao base class có hàm virtual cần virtual destructor?",
+    back: "Để `delete basePtr;` (trỏ tới object derived) gọi đúng destructor của derived. Thiếu `virtual ~Base()` → chỉ gọi destructor base → **UB / rò rỉ tài nguyên**.",
+  },
+  {
+    id: "c-vtable",
+    sectionId: "15",
+    tag: "OOP",
+    front: "Đa hình runtime hoạt động nhờ cơ chế gì?",
+    back: "**vtable** (bảng con trỏ hàm ảo) + vptr trong object. Lời gọi hàm `virtual` được **dynamic dispatch** qua vtable → chọn đúng override lúc runtime.",
+  },
+  {
+    id: "c-override",
+    sectionId: "15",
+    tag: "OOP",
+    front: "Từ khóa `override` giúp gì?",
+    back: "Báo compiler kiểm tra rằng hàm thực sự override một hàm virtual của base (đúng chữ ký). Sai chữ ký → lỗi compile ngay, thay vì âm thầm tạo hàm mới.",
+  },
+  {
+    id: "c-composition",
+    sectionId: "16",
+    tag: "OOP",
+    front: "'Composition over inheritance' — vì sao?",
+    back: "Kế thừa sâu tạo ràng buộc cứng và 'diamond problem'. Composition (chứa object khác làm thành phần) linh hoạt hơn, dễ tái sử dụng và test — nền tảng của tư duy ECS trong game.",
+  },
+
+  // ---- Part IV: Modern C++ ----
+  {
+    id: "c-auto",
+    sectionId: "17",
+    tag: "Modern",
+    front: "`auto` nên và không nên dùng khi nào?",
+    back: "**Nên**: kiểu dài/iterator (`auto it = v.begin();`), range-based for. **Cẩn thận**: khi che giấu kiểu quan trọng làm giảm khả năng đọc. `auto` suy kiểu lúc compile, không phải dynamic typing.",
+  },
+  {
+    id: "c-range-for",
+    sectionId: "17",
+    tag: "Modern",
+    front: "Vì sao thường viết `for (const auto& x : v)`?",
+    back: "`const auto&` tránh **copy** mỗi phần tử và ngăn sửa đổi ngoài ý muốn. Dùng `auto&` khi cần sửa, `auto` (copy) chỉ khi thực sự muốn bản sao.",
+  },
+  {
+    id: "c-lambda-capture",
+    sectionId: "18",
+    tag: "Lambda",
+    front: "Các kiểu capture của lambda: `[=]`, `[&]`, `[this]`?",
+    back: "`[=]` copy by value, `[&]` capture by reference, `[this]` bắt con trỏ this. **Cảnh báo**: `[&]` giữ tham chiếu — nếu lambda sống lâu hơn biến thì dangling. Trong game hay ưu tiên capture tường minh.",
+  },
+  {
+    id: "c-template",
+    sectionId: "19",
+    tag: "Template",
+    front: "Template được 'instantiate' khi nào?",
+    back: "Lúc **compile**, cho từng kiểu cụ thể được dùng. Vì vậy định nghĩa template thường phải nằm trong header. Đây là nền tảng của generic programming (viết 1 lần, chạy nhiều kiểu).",
+    code: "template <typename T>\nT Max(T a, T b) { return a > b ? a : b; }",
+  },
+  {
+    id: "c-vector",
+    sectionId: "20",
+    tag: "STL",
+    front: "`std::vector` lưu dữ liệu thế nào và vì sao nhanh?",
+    back: "Mảng động **liền kề trong bộ nhớ** (contiguous) → cache-friendly. `push_back` amortized O(1); truy cập ngẫu nhiên O(1). Container mặc định nên chọn trong hầu hết trường hợp.",
+  },
+  {
+    id: "c-map-unordered",
+    sectionId: "20",
+    tag: "STL",
+    front: "`std::map` vs `std::unordered_map`?",
+    back: "**`map`**: cây cân bằng, có thứ tự, tra cứu O(log n). **`unordered_map`**: hash table, không thứ tự, tra cứu trung bình O(1). Cần tốc độ & không cần thứ tự → `unordered_map`.",
+  },
+  {
+    id: "c-algorithms",
+    sectionId: "21",
+    tag: "STL",
+    front: "Vì sao ưu tiên STL algorithm hơn vòng lặp tay?",
+    back: "`std::sort`, `find_if`, `transform`, `accumulate`… rõ ràng ý định, ít bug off-by-one, và thường được tối ưu tốt. Iterator là 'cầu nối' giữa container và algorithm.",
+  },
+  {
+    id: "c-const-correct",
+    sectionId: "22",
+    tag: "const",
+    front: "const-correctness mang lại lợi ích gì?",
+    back: "Đánh dấu cái gì **không đổi** → compiler bắt lỗi sửa nhầm, tài liệu hóa ý định, cho tối ưu tốt hơn. `void f() const` = method không sửa object; `const T&` = tham chiếu chỉ đọc.",
+  },
+  {
+    id: "c-constexpr",
+    sectionId: "22",
+    tag: "const",
+    front: "`const` vs `constexpr`?",
+    back: "`const` = không đổi sau khởi tạo (có thể tính lúc runtime). `constexpr` = tính được **lúc compile** → dùng cho hằng thật sự, mảng cỡ cố định, tối ưu. `enum class` cho hằng có kiểu, an toàn hơn enum thường.",
+  },
+  {
+    id: "c-error-handling",
+    sectionId: "23",
+    tag: "Error",
+    front: "Chiến lược xử lý lỗi trong game thường thế nào?",
+    back: "Exception cho lỗi hiếm/nghiêm trọng; nhiều engine game **tắt exception** ở hot path vì chi phí. Thay bằng error code, `std::optional`, `assert`/`check` cho lỗi lập trình. Chọn theo bối cảnh hiệu năng.",
+  },
+
+  // ---- Part V: Game ----
+  {
+    id: "c-why-cpp-game",
+    sectionId: "24",
+    tag: "Game",
+    front: "Vì sao C++ thống trị game dev?",
+    back: "Hiệu năng gần phần cứng, kiểm soát bộ nhớ (không GC pause), truy cập trực tiếp GPU/API, hệ sinh thái engine (Unreal, nhiều engine AAA) và thư viện trưởng thành.",
+  },
+  {
+    id: "c-game-loop",
+    sectionId: "25",
+    tag: "Game",
+    front: "Cấu trúc cơ bản của một game loop?",
+    back: "Lặp mỗi frame: **Process Input → Update (logic, physics theo deltaTime) → Render**. Fixed timestep cho physics ổn định; interpolation cho hình ảnh mượt.",
+    code: "while (running) {\n    ProcessInput();\n    Update(deltaTime);\n    Render();\n}",
+  },
+  {
+    id: "c-ecs",
+    sectionId: "26",
+    tag: "Game",
+    front: "Data-Oriented Design & ECS tối ưu điều gì?",
+    back: "Sắp xếp dữ liệu theo cách CPU thích (liền kề, ít cache miss) thay vì theo OOP. **ECS** = Entity (id) + Component (data thuần) + System (logic chạy trên mảng component) → cực nhanh & dễ song song.",
+  },
+  {
+    id: "c-cache",
+    sectionId: "27",
+    tag: "Performance",
+    front: "Vì sao 'cache miss' quan trọng với hiệu năng?",
+    back: "Truy cập RAM chậm hơn cache hàng chục–trăm lần. Dữ liệu liền kề (array of structs → struct of arrays) giúp CPU prefetch, giảm miss. 'Đo trước khi tối ưu' — dùng profiler.",
+  },
+  {
+    id: "c-vector-math",
+    sectionId: "28",
+    tag: "Math",
+    front: "Dot product và cross product dùng để làm gì trong game?",
+    back: "**Dot**: góc/hướng giữa 2 vector (>0 cùng phía, 0 vuông góc) — dùng cho ánh sáng, tầm nhìn. **Cross**: vector vuông góc với 2 vector — dùng cho pháp tuyến, mô-men xoắn, hệ tọa độ.",
+  },
+  {
+    id: "c-quaternion",
+    sectionId: "28",
+    tag: "Math",
+    front: "Vì sao game dùng quaternion cho phép quay?",
+    back: "Tránh **gimbal lock** của Euler angles, nội suy mượt (slerp), gọn (4 số) và ghép phép quay hiệu quả. Ít trực quan hơn nhưng ổn định về số học.",
+  },
+
+  // ---- Part VI: Unreal ----
+  {
+    id: "c-ue-uclass",
+    sectionId: "31",
+    tag: "Unreal",
+    front: "`UCLASS`, `UPROPERTY`, `UFUNCTION` để làm gì?",
+    back: "Macro reflection của UE: cho engine 'biết' về class/biến/hàm → hỗ trợ **GC, serialization, editor, Blueprint**. `UPROPERTY()` còn giữ UObject khỏi bị GC thu hồi.",
+  },
+  {
+    id: "c-ue-gc",
+    sectionId: "32",
+    tag: "Unreal",
+    front: "Garbage Collection trong UE hoạt động thế nào?",
+    back: "UE tự thu hồi `UObject` không còn được tham chiếu bởi `UPROPERTY()` hoặc root set. Vì vậy con trỏ UObject phải là `UPROPERTY()` hoặc `TObjectPtr` — nếu không có thể bị GC 'nuốt' bất ngờ.",
+  },
+  {
+    id: "c-ue-actor-component",
+    sectionId: "33",
+    tag: "Unreal",
+    front: "Actor vs Component trong UE?",
+    back: "**Actor**: object có thể đặt vào thế giới (có transform). **Component**: khối chức năng gắn vào actor (mesh, collision, movement…). Ưu tiên composition qua component thay vì kế thừa sâu.",
+  },
+  {
+    id: "c-ue-containers",
+    sectionId: "35",
+    tag: "Unreal",
+    front: "STL container tương ứng với UE container nào?",
+    back: "`std::vector`→`TArray`, `std::unordered_map`→`TMap`, `std::unordered_set`→`TSet`, `std::string`→`FString`. Trong code UE nên dùng container UE để hợp với engine (serialization, GC).",
+  },
+  {
+    id: "c-ue-delegate",
+    sectionId: "37",
+    tag: "Unreal",
+    front: "Delegate trong UE là hiện thực của pattern nào?",
+    back: "**Observer pattern** — cho phép đăng ký callback và 'phát' sự kiện (Broadcast) tới nhiều listener. Nền tảng của hệ thống event, gameplay, UI trong Unreal.",
+  },
+
+  // ---- Part VII: Practices ----
+  {
+    id: "c-forward-decl",
+    sectionId: "41",
+    tag: "Kỹ thuật",
+    front: "Forward declaration giúp gì?",
+    back: "Khai báo tên class mà chưa cần định nghĩa đầy đủ (`class Player;`) → giảm `#include` trong header → giảm thời gian build & phụ thuộc vòng. Dùng được khi chỉ cần con trỏ/tham chiếu.",
+  },
+  {
+    id: "c-ub",
+    sectionId: "44",
+    tag: "Bẫy",
+    front: "Kể vài Undefined Behavior phổ biến trong C++?",
+    back: "Dùng con trỏ dangling/uninitialized, truy cập ngoài mảng (out-of-bounds), integer overflow (signed), dùng biến chưa khởi tạo, trộn `new`/`delete[]`, data race. UB = compiler được phép làm 'bất cứ gì'.",
+  },
+  {
+    id: "c-naming",
+    sectionId: "42",
+    tag: "Kỹ thuật",
+    front: "Vì sao thống nhất naming convention lại quan trọng?",
+    back: "Code dễ đọc, dễ bảo trì theo nhóm. UE có quy ước riêng (prefix `A`ctor, `U`Object, `F`Struct, `b`bool, `E`num). Nhất quán > hoàn hảo.",
+  },
+];
+
+/** All card ids, in deck order. */
+export const cardIds = cards.map((c) => c.id);
+
+const cardById: Record<string, Flashcard> = {};
+for (const c of cards) cardById[c.id] = c;
+export function getCard(id: string): Flashcard | undefined {
+  return cardById[id];
+}
