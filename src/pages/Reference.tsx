@@ -1,13 +1,38 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { reference } from "../content/reference";
 import { actions, useStore } from "../lib/store";
 import Markdown from "../components/Markdown";
 
 export default function Reference() {
   const state = useStore();
-  const appendix = reference.parts.find((p) => /ph[uụ]/i.test(p.id)) ?? reference.parts.at(-1);
+  const [params, setParams] = useSearchParams();
+  const appendix = reference.appendix ?? reference.parts.at(-1);
   const sections = appendix?.sections ?? [];
-  const [active, setActive] = useState<string>(sections[0]?.id ?? "settings");
+
+  const requested = params.get("tab");
+  const initial =
+    (requested && (requested === "settings" || sections.some((s) => s.id === requested))
+      ? requested
+      : null) ??
+    sections[0]?.id ??
+    "settings";
+  const [active, setActive] = useState<string>(initial);
+
+  // follow deep links like /reference?tab=h when they change
+  useEffect(() => {
+    if (requested && requested !== active) {
+      if (requested === "settings" || sections.some((s) => s.id === requested)) {
+        setActive(requested);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [requested]);
+
+  const select = (id: string) => {
+    setActive(id);
+    setParams({ tab: id }, { replace: true });
+  };
 
   const current = sections.find((s) => s.id === active);
 
@@ -25,7 +50,7 @@ export default function Reference() {
           <button
             key={s.id}
             className={"tab" + (active === s.id ? " active" : "")}
-            onClick={() => setActive(s.id)}
+            onClick={() => select(s.id)}
           >
             {s.num ? `${s.num}. ` : ""}
             {s.title}
@@ -33,7 +58,7 @@ export default function Reference() {
         ))}
         <button
           className={"tab" + (active === "settings" ? " active" : "")}
-          onClick={() => setActive("settings")}
+          onClick={() => select("settings")}
         >
           ⚙ Cài đặt
         </button>

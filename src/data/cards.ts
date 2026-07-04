@@ -349,6 +349,87 @@ export const cards: Flashcard[] = [
     front: "Vì sao thống nhất naming convention lại quan trọng?",
     back: "Code dễ đọc, dễ bảo trì theo nhóm. UE có quy ước riêng (prefix `A`ctor, `U`Object, `F`Struct, `b`bool, `E`num). Nhất quán > hoàn hảo.",
   },
+
+  // ---- Section 0: Setup ----
+  {
+    id: "c-setup-paths",
+    sectionId: "0",
+    tag: "Setup",
+    front: "Hai 'đường build' mà máy bạn cần chạy được (mục 0)?",
+    back: "**Đường 1 — C++ thuần:** Visual Studio → Console App (F5) hoặc CMake. **Đường 2 — Unreal:** tạo project Third Person **C++**, build cấu hình *Development Editor | Win64*, rồi mở `.uproject`.",
+  },
+  {
+    id: "c-live-coding",
+    sectionId: "0",
+    tag: "Unreal",
+    front: "Live Coding trong UE dùng khi nào và giới hạn gì?",
+    back: "**Ctrl+Alt+F11** biên dịch thay đổi trong **`.cpp`** khi editor đang mở — nhanh để iterate logic. ⚠️ Đổi **header** (`UPROPERTY`/`UFUNCTION`/layout class) → **đóng editor, build từ IDE** rồi mở lại.",
+  },
+
+  // ---- Part VIII: Supplementary ----
+  {
+    id: "c-casts-4",
+    sectionId: "46",
+    tag: "Casting",
+    front: "4 kiểu cast tường minh của C++ — cái nào kiểm tra runtime?",
+    back: "`static_cast` (số↔số, up/down-cast tự chịu — **không** check), `dynamic_cast` (down-cast **an toàn** khi có `virtual`/RTTI — trả `nullptr` nếu sai), `const_cast` (gỡ/thêm const — code smell), `reinterpret_cast` (diễn giải lại bit — nguy hiểm nhất). Tránh C-style cast `(T)x`.",
+  },
+  {
+    id: "c-ue-cast",
+    sectionId: "46",
+    tag: "Unreal",
+    front: "Cast UObject trong Unreal dùng gì, khác `dynamic_cast` sao?",
+    back: "Dùng `Cast<T>()` (trả `nullptr` nếu sai kiểu) vì UE **tắt RTTI** và UObject có reflection. `CastChecked<T>()` khi **chắc chắn** đúng kiểu (sai → assert). `Cast<>` **chỉ cho UObject**.",
+  },
+  {
+    id: "c-static-3",
+    sectionId: "47",
+    tag: "Linkage",
+    front: "3 nghĩa của `static` trong C++?",
+    back: "**1) static local** — giữ giá trị qua các lần gọi (khởi tạo 1 lần, thread-safe từ C++11). **2) static member** — thuộc về class, mọi object dùng chung. **3) static free function** — chỉ thấy trong file `.cpp` đó (internal linkage).",
+  },
+  {
+    id: "c-using-namespace",
+    sectionId: "47",
+    tag: "Linkage",
+    front: "Vì sao cấm `using namespace` trong header?",
+    back: "Nó đổ toàn bộ namespace vào **mọi file** include header đó → đụng độ tên khó lường. Trong `.cpp` dùng tiết chế. `namespace { ... }` (anonymous) = 'private cấp file', thay cho `static` tự do.",
+  },
+  {
+    id: "c-operator-overload",
+    sectionId: "48",
+    tag: "Operator",
+    front: "Khác nhau giữa `operator+` và `operator+=`?",
+    back: "`operator+` trả **giá trị mới** và là `const`; `operator+=` **sửa chính mình** rồi `return *this`. Toán tử đối xứng (`+`,`*`,`==`) nên viết **free function**. C++20: `operator== ... = default;` và `<=>` sinh luôn `<,<=,>,>=`.",
+  },
+  {
+    id: "c-data-race",
+    sectionId: "50",
+    tag: "Threading",
+    front: "Data race là gì? Hai công cụ tối thiểu để tránh?",
+    back: "Nhiều thread đọc/ghi cùng dữ liệu không đồng bộ → **UB**. Bảo vệ bằng **`std::mutex` + `std::lock_guard`** (RAII) hoặc **`std::atomic`** cho biến đơn giản. Tốt hơn: **đừng chia sẻ** — mỗi thread dữ liệu riêng, gộp sau.",
+  },
+  {
+    id: "c-ue-gamethread",
+    sectionId: "50",
+    tag: "Unreal",
+    front: "Quy tắc số 1 về thread trong Unreal?",
+    back: "Chỉ được đụng `UObject`/`AActor` (spawn, destroy, set property, hầu hết API engine) trên **Game Thread**. Nghi ngờ → `IsInGameThread()`. Việc nặng (không đụng UObject) đẩy sang thread pool bằng `Async`, xong `AsyncTask(ENamedThreads::GameThread, ...)` để quay về.",
+  },
+  {
+    id: "c-enhanced-input",
+    sectionId: "52",
+    tag: "Unreal",
+    front: "Enhanced Input (UE5): phân biệt IA và IMC?",
+    back: "**IA_** = MỘT hành động trừu tượng + kiểu giá trị (`IA_Move` Axis2D, `IA_Jump` bool). **IMC_** = bảng map **phím → action** kèm modifier/trigger. Kích hoạt IMC cho local player qua `UEnhancedInputLocalPlayerSubsystem::AddMappingContext`. Input cũ (BindAxis/Action) deprecated từ UE 5.1.",
+  },
+  {
+    id: "c-testing",
+    sectionId: "55",
+    tag: "Testing",
+    front: "Nguyên tắc thiết kế để code test được?",
+    back: "**Tách logic thuần** (tính damage, kho đồ...) ra khỏi engine — nhờ composition (mục 16) & data-driven (mục 39). C++ thuần: GoogleTest/Catch2. Unreal: Automation Test (`IMPLEMENT_SIMPLE_AUTOMATION_TEST`, chạy ở Session Frontend). Bắt đầu từ hàm thuần logic.",
+  },
 ];
 
 /** All card ids, in deck order. */

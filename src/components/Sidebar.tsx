@@ -34,8 +34,9 @@ export default function Sidebar() {
   }, [activePartId]);
 
   const due = countDue(state.srs);
-  const totalRead = Object.values(state.progress).filter((p) => p.read).length;
-  const totalSections = reference.sections.length;
+  const lessons = reference.lessonSections;
+  const totalSections = lessons.length;
+  const totalRead = lessons.filter((s) => state.progress[s.id]?.read).length;
 
   const toggle = (pid: string) =>
     setOpen((prev) => {
@@ -72,7 +73,9 @@ export default function Sidebar() {
 
       <div className="nav-title">Chương trình học</div>
       <div className="tree">
-        {reference.parts.map((part) => {
+        {reference.parts
+          .filter((p) => !p.isAppendix)
+          .map((part) => {
           const isOpen = open.has(part.id);
           const readInPart = part.sections.filter((s) => state.progress[s.id]?.read).length;
           return (

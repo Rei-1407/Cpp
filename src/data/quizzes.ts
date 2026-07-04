@@ -365,6 +365,108 @@ export const quizzes: Record<string, QuizQuestion[]> = {
       answer: 2,
     },
   ],
+  "0": [
+    {
+      id: "q0-1",
+      q: "Cách nhanh nhất để thử code C++ mà không cần cài gì?",
+      choices: ["Notepad", "Compiler Explorer (godbolt.org)", "Microsoft Word", "Paint"],
+      answer: 1,
+      explain: "godbolt.org cho phép dán code C++, thấy ngay kết quả & mã assembly.",
+    },
+  ],
+  "46": [
+    {
+      id: "q46-1",
+      q: "Cast nào là down-cast AN TOÀN, trả nullptr nếu sai kiểu?",
+      choices: ["static_cast", "dynamic_cast", "const_cast", "reinterpret_cast"],
+      answer: 1,
+      explain: "dynamic_cast kiểm tra runtime (cần RTTI); trả nullptr nếu đối tượng không đúng kiểu.",
+    },
+    {
+      id: "q46-2",
+      q: "Trong Unreal, để cast một UObject nên dùng?",
+      choices: ["dynamic_cast<T>", "Cast<T>()", "static_cast<T>", "C-style cast (T)x"],
+      answer: 1,
+      explain: "UE thường tắt RTTI; Cast<> dựa vào reflection của UObject, trả nullptr nếu sai kiểu.",
+    },
+  ],
+  "47": [
+    {
+      id: "q47-1",
+      q: "`static int calls = 0;` bên trong một hàm nghĩa là?",
+      choices: [
+        "Một biến toàn cục",
+        "Giữ giá trị qua các lần gọi (static local)",
+        "Thành viên của class",
+        "Hằng số chỉ đọc",
+      ],
+      answer: 1,
+    },
+    {
+      id: "q47-2",
+      q: "Viết `using namespace std;` trong một header là?",
+      choices: [
+        "Được khuyến khích",
+        "Cấm — đổ cả namespace vào mọi file include header đó",
+        "Bắt buộc",
+        "Chỉ gây lỗi trong Unreal",
+      ],
+      answer: 1,
+    },
+  ],
+  "50": [
+    {
+      id: "q50-1",
+      q: "Trong Unreal, được phép spawn/sửa UObject/Actor trên thread nào?",
+      choices: ["Bất kỳ thread nào", "Chỉ Game Thread", "Chỉ Render Thread", "Chỉ worker thread"],
+      answer: 1,
+      explain: "Nghi ngờ thì kiểm tra bằng IsInGameThread().",
+    },
+    {
+      id: "q50-2",
+      q: "Cách nhẹ nhất để cộng an toàn một biến đếm chia sẻ giữa các thread?",
+      choices: ["Biến int thường", "std::atomic", "Không cần gì", "Từ khóa volatile"],
+      answer: 1,
+      explain: "atomic nhẹ hơn mutex cho biến đơn giản; volatile KHÔNG đảm bảo tính nguyên tử.",
+    },
+  ],
+  "52": [
+    {
+      id: "q52-1",
+      q: "Trong Enhanced Input, asset nào map phím → action?",
+      choices: [
+        "Input Action (IA_)",
+        "Input Mapping Context (IMC_)",
+        "PlayerController",
+        "Blueprint",
+      ],
+      answer: 1,
+    },
+    {
+      id: "q52-2",
+      q: "Hệ input cũ (BindAxis/BindAction qua .ini) hiện trạng thế nào?",
+      choices: [
+        "Khuyến nghị cho dự án mới",
+        "Deprecated từ UE 5.1",
+        "Chỉ dùng cho mobile",
+        "Nhanh hơn Enhanced Input",
+      ],
+      answer: 1,
+    },
+  ],
+  "55": [
+    {
+      id: "q55-1",
+      q: "Nguyên tắc giúp code dễ test nhất?",
+      choices: [
+        "Nhồi hết logic vào Actor/engine",
+        "Tách logic thuần ra khỏi engine",
+        "Chỉ test tay qua UI",
+        "Đợi QA test cuối dự án",
+      ],
+      answer: 1,
+    },
+  ],
 };
 
 export function quizFor(sectionId: string): QuizQuestion[] {

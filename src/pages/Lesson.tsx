@@ -54,12 +54,11 @@ export default function Lesson() {
     [section],
   );
 
-  const flatIndex = section ? reference.sections.findIndex((s) => s.id === section.id) : -1;
-  const prev = flatIndex > 0 ? reference.sections[flatIndex - 1] : undefined;
+  const lessons = reference.lessonSections;
+  const flatIndex = section ? lessons.findIndex((s) => s.id === section.id) : -1;
+  const prev = flatIndex > 0 ? lessons[flatIndex - 1] : undefined;
   const next =
-    flatIndex >= 0 && flatIndex < reference.sections.length - 1
-      ? reference.sections[flatIndex + 1]
-      : undefined;
+    flatIndex >= 0 && flatIndex < lessons.length - 1 ? lessons[flatIndex + 1] : undefined;
 
   if (!section) return <Navigate to="/" replace />;
 

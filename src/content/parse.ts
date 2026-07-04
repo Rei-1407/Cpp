@@ -38,6 +38,8 @@ export interface Part {
   title: string;
   /** short label like "PHẦN I" or "PHỤ LỤC" extracted from the heading */
   label: string;
+  /** true for the "PHỤ LỤC" (appendix) group — treated as reference, not lessons */
+  isAppendix: boolean;
   sections: Section[];
 }
 
@@ -45,7 +47,12 @@ export interface Reference {
   title: string;
   intro: string;
   parts: Part[];
+  /** every parsed section, incl. appendices (used for global search) */
   sections: Section[];
+  /** only the numbered lessons (Parts I..N), excluding appendices */
+  lessonSections: Section[];
+  /** the appendix part, if present */
+  appendix?: Part;
   byId: Record<string, Section>;
 }
 
@@ -131,6 +138,7 @@ export function parseReference(raw: string): Reference {
       id: slugify(label) || slugify(heading),
       title: heading.trim(),
       label,
+      isAppendix: /ph[uụ]\s*l[uụ]c/i.test(heading) || /ph[uụ]\s*l[uụ]c/i.test(label),
       sections: [],
     };
     parts.push(currentPart);
@@ -159,8 +167,8 @@ export function parseReference(raw: string): Reference {
 
     if (!inFence && /^##\s+/.test(line)) {
       const heading = line.replace(/^##\s+/, "").trim();
-      // Skip the table-of-contents section.
-      if (/mục lục/i.test(heading)) {
+      // Skip meta sections (table of contents, version changelog).
+      if (/mục lục|nhật ký phiên bản|changelog/i.test(heading)) {
         pushSection();
         secHeading = null;
         continue;
@@ -185,8 +193,10 @@ export function parseReference(raw: string): Reference {
     .trim();
 
   const sections = parts.flatMap((p) => p.sections);
+  const lessonSections = parts.filter((p) => !p.isAppendix).flatMap((p) => p.sections);
+  const appendix = parts.find((p) => p.isAppendix);
   const byId: Record<string, Section> = {};
   for (const s of sections) byId[s.id] = s;
 
-  return { title, intro, parts, sections, byId };
+  return { title, intro, parts, sections, lessonSections, appendix, byId };
 }

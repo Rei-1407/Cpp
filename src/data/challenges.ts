@@ -115,6 +115,23 @@ int main() {
       hints: ["Comparator trả về `a > b` cho thứ tự giảm dần.", "Đừng quên `#include <algorithm>`."],
     },
   ],
+  "46": [
+    {
+      id: "ch46-1",
+      sectionId: "46",
+      type: "predict",
+      title: "Narrowing khi ép kiểu",
+      prompt: "Chương trình in ra gì?",
+      code: `#include <iostream>
+int main() {
+    int   j = 3.7f;      // narrowing: cắt phần thập phân
+    float f = 5;         // 5 -> 5.0
+    std::cout << j << " " << f;
+}`,
+      expected: "3 5",
+      hints: ["`int j = 3.7f` cắt phần thập phân → 3.", "`std::cout` in float 5.0 là \"5\"."],
+    },
+  ],
   "25": [
     {
       id: "ch25-1",

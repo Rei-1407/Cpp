@@ -22,15 +22,25 @@ export default function Dashboard() {
     return !c || c.due <= today;
   }).length;
 
-  const readCount = Object.values(state.progress).filter((p) => p.read).length;
-  const total = reference.sections.length;
+  const lessons = reference.lessonSections;
+  const readCount = lessons.filter((s) => state.progress[s.id]?.read).length;
+  const total = lessons.length;
 
   const reviewsToday = state.activityByDay[dayKey()]?.reviews ?? 0;
   const goalPct = Math.min(1, reviewsToday / state.dailyGoal);
 
-  // continue: first unread section in curriculum order (else first section)
-  const nextLesson =
-    reference.sections.find((s) => !state.progress[s.id]?.read) ?? reference.sections[0];
+  // continue: first unread lesson in curriculum order (else first lesson)
+  const nextLesson = lessons.find((s) => !state.progress[s.id]?.read) ?? lessons[0];
+
+  // surface the richer appendices as quick links (if present in the doc)
+  const ap = reference.appendix;
+  const findAp = (re: RegExp) => ap?.sections.find((s) => re.test(s.title));
+  const resources = [
+    { icon: "🧭", title: "Lộ trình & Onboarding", desc: "Chọn track theo vai trò", sec: findAp(/lộ trình|onboarding/i) },
+    { icon: "🧪", title: "Bài tập theo phần", desc: "Thực hành sau mỗi chương", sec: findAp(/bài tập/i) },
+    { icon: "🏆", title: "Capstone Project", desc: "Đồ án tổng kết", sec: findAp(/capstone/i) },
+    { icon: "🐞", title: "Bảng lỗi thường gặp", desc: "Tra cứu lỗi build & runtime", sec: findAp(/lỗi/i) },
+  ].filter((r) => r.sec);
 
   return (
     <div className="page narrow fade" style={{ padding: 0 }}>
@@ -91,7 +101,9 @@ export default function Dashboard() {
         <div>
           <h2 className="section-title">Lộ trình học</h2>
           <div className="part-cards">
-            {reference.parts.map((part) => {
+            {reference.parts
+              .filter((p) => !p.isAppendix)
+              .map((part) => {
               const read = part.sections.filter((s) => state.progress[s.id]?.read).length;
               const pct = part.sections.length ? read / part.sections.length : 0;
               const first = part.sections[0];
@@ -139,6 +151,26 @@ export default function Dashboard() {
           </Link>
         </div>
       </div>
+
+      {resources.length > 0 && (
+        <section style={{ marginTop: 30 }}>
+          <h2 className="section-title">Tài nguyên &amp; lộ trình</h2>
+          <div className="part-cards">
+            {resources.map((r) => (
+              <Link key={r.sec!.id} to={`/reference?tab=${r.sec!.id}`} className="card part-card">
+                <div style={{ fontSize: 24, marginBottom: 8 }}>{r.icon}</div>
+                <div className="pc-title" style={{ margin: 0 }}>
+                  {r.title}
+                </div>
+                <div className="pc-meta" style={{ marginTop: 8, marginBottom: 0 }}>
+                  <span>{r.desc}</span>
+                  <span>→</span>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }
