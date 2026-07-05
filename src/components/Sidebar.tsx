@@ -48,7 +48,7 @@ export default function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="brand">
-        <div className="logo">C++</div>
+        <div className="logo reix-mark" role="img" aria-label="ReiX Labs"></div>
         <div>
           <div className="brand-name">C++ Dojo</div>
           <div className="brand-sub">Game Dev · học &amp; luyện tập</div>
