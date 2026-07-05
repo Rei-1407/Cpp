@@ -39,6 +39,24 @@ int main() {
       hints: ["`p` trỏ tới a trước, rồi được trỏ lại sang b.", "Mỗi `*p = ...` ghi vào biến mà p đang trỏ."],
     },
   ],
+  "5": [
+    {
+      id: "ch5-1",
+      sectionId: "5",
+      type: "predict",
+      title: "Truyền tham chiếu",
+      prompt: "Chương trình in ra gì?",
+      code: `#include <iostream>
+void addFive(int& n) { n += 5; }
+int main() {
+    int x = 10;
+    addFive(x);
+    std::cout << x;
+}`,
+      expected: "15",
+      hints: ["`int&` là tham chiếu → sửa trực tiếp biến gốc x."],
+    },
+  ],
   "10": [
     {
       id: "ch10-1",
@@ -59,6 +77,21 @@ int main() {
     world.add(std::move(e));    // chuyển ownership vào world
 }`,
       hints: ["Dùng `std::make_unique`.", "Chuyển quyền sở hữu bằng `std::move`."],
+    },
+  ],
+  "14": [
+    {
+      id: "ch14-1",
+      sectionId: "14",
+      type: "predict",
+      title: "Thứ tự gọi constructor",
+      prompt: "Chương trình in ra gì?",
+      code: `#include <iostream>
+struct A { A() { std::cout << "A"; } };
+struct B : A { B() { std::cout << "B"; } };
+int main() { B b; }`,
+      expected: "AB",
+      hints: ["Constructor của base chạy TRƯỚC constructor của derived."],
     },
   ],
   "15": [
@@ -100,6 +133,24 @@ int main() {
       hints: ["push_back thêm phần tử thứ 4.", "Tổng 1+2+3+4."],
     },
   ],
+  "18": [
+    {
+      id: "ch18-1",
+      sectionId: "18",
+      type: "predict",
+      title: "Lambda capture by value",
+      prompt: "Chương trình in ra gì?",
+      code: `#include <iostream>
+int main() {
+    int base = 100;
+    auto add = [base](int x) { return base + x; };
+    base = 0;             // đổi sau khi đã capture
+    std::cout << add(5);
+}`,
+      expected: "105",
+      hints: ["`[base]` capture BY VALUE → chụp giá trị 100 tại lúc tạo lambda.", "Đổi base sau đó không ảnh hưởng bản đã copy."],
+    },
+  ],
   "21": [
     {
       id: "ch21-1",
@@ -130,6 +181,22 @@ int main() {
 }`,
       expected: "3 5",
       hints: ["`int j = 3.7f` cắt phần thập phân → 3.", "`std::cout` in float 5.0 là \"5\"."],
+    },
+  ],
+  "48": [
+    {
+      id: "ch48-1",
+      sectionId: "48",
+      type: "code",
+      title: "Overload operator+ cho Vec2",
+      prompt: "Viết `operator+` (free function) để `a + b` cộng từng thành phần của Vec2.",
+      code: `struct Vec2 { float x, y; };
+// viết operator+ ở đây ...
+// mong muốn: Vec2 c = a + b;`,
+      solution: `Vec2 operator+(const Vec2& a, const Vec2& b) {
+    return { a.x + b.x, a.y + b.y };
+}`,
+      hints: ["Nhận 2 tham số const&, trả về Vec2 mới.", "Toán tử đối xứng nên viết dạng free function."],
     },
   ],
   "25": [

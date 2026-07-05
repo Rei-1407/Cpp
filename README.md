@@ -8,10 +8,11 @@ Nền tảng học C++ nội bộ: đọc bài học có hệ thống, luyện t
 
 ## Tính năng
 
-- **Bài học** tự sinh từ file tài liệu `Cpp_Game_Dev_Reference.md` — đổi tài liệu là cả web đổi theo.
+- **Bài học** tự sinh từ file tài liệu `Cpp_Game_Dev_Reference.md` — đổi tài liệu là cả web đổi theo. Phụ lục tách sang khu **Tra cứu**.
 - **Luyện tập** tách riêng khỏi phần đọc (tab riêng): trắc nghiệm, "đoán output", thử thách code (mở thẳng trong Compiler Explorer để chạy thử).
 - **Ôn tập hàng ngày** — thuật toán SM-2 lên lịch nhắc lại đúng lúc bạn sắp quên. Nội dung "xào đi xào lại" để nhớ lâu.
-- **Tạo động lực:** chuỗi ngày (streak) 🔥, điểm XP, mục tiêu ngày, thanh tiến độ theo từng phần.
+- **Bài tập thực hành** — đọc từ Phụ lục F, đánh dấu hoàn thành + lưu link PR/commit của bạn (cục bộ).
+- **Tạo động lực:** hệ thống **cấp độ + XP**, **huy hiệu (achievements)**, **lịch hoạt động** kiểu GitHub, chuỗi ngày 🔥, mục tiêu ngày, thanh tiến độ theo từng phần.
 - **Tìm kiếm** nhanh toàn bộ tài liệu, cheat sheet &amp; glossary.
 - **Sáng/tối**, tối ưu cho desktop.
 - Toàn bộ tiến độ lưu trên trình duyệt (localStorage) — không cần server, không cần đăng nhập.

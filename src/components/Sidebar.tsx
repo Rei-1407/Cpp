@@ -64,6 +64,12 @@ export default function Sidebar() {
           {due > 0 && <span className="badge">{due}</span>}
         </NavLink>
         <NavLink
+          to="/exercises"
+          className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
+        >
+          <span className="nav-ico">🛠️</span> Bài tập thực hành
+        </NavLink>
+        <NavLink
           to="/reference"
           className={({ isActive }) => "nav-link" + (isActive ? " active" : "")}
         >

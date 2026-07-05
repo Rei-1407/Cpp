@@ -467,6 +467,99 @@ export const quizzes: Record<string, QuizQuestion[]> = {
       answer: 1,
     },
   ],
+  "3": [
+    {
+      id: "q3-1",
+      q: "Khởi tạo nào CHẶN narrowing (an toàn hơn)?",
+      choices: ["int x = 3.7f", "int x(3.7f)", "int x{3.7f}  // lỗi biên dịch", "auto x = 3.7f"],
+      answer: 2,
+      explain: "Brace-init {} chặn narrowing → int x{3.7f} không biên dịch được, buộc bạn ép kiểu tường minh.",
+    },
+  ],
+  "5": [
+    {
+      id: "q5-1",
+      q: "Truyền một object LỚN chỉ để đọc, nên dùng?",
+      choices: ["by value (T)", "const reference (const T&)", "con trỏ thô (T*)", "static T"],
+      answer: 1,
+      explain: "const T& tránh copy tốn kém và đảm bảo không sửa đổi.",
+    },
+  ],
+  "14": [
+    {
+      id: "q14-1",
+      q: "`class Dog : public Animal` nghĩa là?",
+      choices: ["Dog chứa Animal", "Dog is-a Animal", "Animal is-a Dog", "Không liên quan"],
+      answer: 1,
+    },
+  ],
+  "29": [
+    {
+      id: "q29-1",
+      q: "Pattern nào tránh new/delete liên tục cho bullet/enemy?",
+      choices: ["Singleton", "Object Pool", "Observer", "Factory"],
+      answer: 1,
+    },
+  ],
+  "30": [
+    {
+      id: "q30-1",
+      q: "Unreal build code bằng công cụ nào?",
+      choices: ["CMake", "UnrealBuildTool (.Build.cs)", "Make", "Autotools"],
+      answer: 1,
+    },
+  ],
+  "34": [
+    {
+      id: "q34-1",
+      q: "Thành phần nào giữ 'luật chơi' và (mặc định) chỉ tồn tại trên server?",
+      choices: ["PlayerController", "GameMode", "Pawn", "HUD"],
+      answer: 1,
+    },
+  ],
+  "39": [
+    {
+      id: "q39-1",
+      q: "Muốn định nghĩa danh sách quái import từ CSV, dùng?",
+      choices: ["DataAsset", "DataTable", "enum class", "UPROPERTY"],
+      answer: 1,
+    },
+  ],
+  "40": [
+    {
+      id: "q40-1",
+      q: "Trong GAS, cái gì THAY ĐỔI attribute (gây damage/buff)?",
+      choices: ["Gameplay Ability", "Gameplay Effect", "Gameplay Tag", "AttributeSet"],
+      answer: 1,
+    },
+  ],
+  "49": [
+    {
+      id: "q49-1",
+      q: "Chuỗi hiển thị cho người dùng, hỗ trợ đa ngôn ngữ (i18n)?",
+      choices: ["FString", "FName", "FText", "std::string"],
+      answer: 2,
+    },
+    {
+      id: "q49-2",
+      q: "Định danh bất biến, so sánh rất nhanh (asset/tag/bone)?",
+      choices: ["FString", "FName", "FText", "char*"],
+      answer: 1,
+    },
+  ],
+  "54": [
+    {
+      id: "q54-1",
+      q: "RPC đánh dấu `Server` dùng để?",
+      choices: [
+        "Server gọi xuống mọi client",
+        "Client gọi lên server",
+        "Server gọi tới đúng 1 client",
+        "Gọi cục bộ, không qua mạng",
+      ],
+      answer: 1,
+    },
+  ],
 };
 
 export function quizFor(sectionId: string): QuizQuestion[] {

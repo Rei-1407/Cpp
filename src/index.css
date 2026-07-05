@@ -1457,6 +1457,207 @@ a:hover {
   animation: fade 0.24s ease;
 }
 
+/* ============================================================
+   Level bar
+   ============================================================ */
+.level-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+.level-badge {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--accent-grad);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  font-weight: 800;
+  box-shadow: var(--shadow-soft);
+  flex-shrink: 0;
+}
+.level-xp {
+  text-align: right;
+  padding-left: 14px;
+  border-left: 1px solid var(--border-soft);
+  flex-shrink: 0;
+}
+
+/* ============================================================
+   Achievements
+   ============================================================ */
+.ach-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+  gap: 12px;
+}
+.ach {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-soft);
+  background: var(--panel);
+  opacity: 0.62;
+  transition: transform 0.1s, border 0.14s, opacity 0.14s;
+}
+.ach.unlocked {
+  opacity: 1;
+  border-color: color-mix(in srgb, var(--accent) 35%, var(--border));
+  background: linear-gradient(180deg, var(--accent-soft), var(--panel));
+}
+.ach.unlocked:hover {
+  transform: translateY(-2px);
+}
+.ach-ico {
+  font-size: 26px;
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border-radius: 12px;
+  background: var(--surface-2);
+  flex-shrink: 0;
+  filter: grayscale(1);
+}
+.ach.unlocked .ach-ico {
+  filter: none;
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface-2));
+}
+.ach-title {
+  font-weight: 700;
+  font-size: 14px;
+}
+.ach-desc {
+  font-size: 12px;
+  color: var(--text-faint);
+  margin-top: 1px;
+}
+.ach-prog {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+}
+.ach-prog .bar {
+  flex: 1;
+}
+.ach-prog span {
+  font-size: 10.5px;
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+.ach-check {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  color: var(--success);
+  font-weight: 800;
+}
+
+/* ============================================================
+   Activity heatmap
+   ============================================================ */
+.heatmap {
+  display: grid;
+  grid-template-rows: repeat(7, 1fr);
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 4px;
+}
+.hm-cell {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 3px;
+  min-width: 9px;
+}
+.hm-cell.empty {
+  background: transparent !important;
+}
+
+/* ============================================================
+   Exercises
+   ============================================================ */
+.ex-item {
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-soft);
+  background: var(--surface-2);
+  transition: border 0.14s, background 0.14s;
+}
+.ex-item.done {
+  border-color: color-mix(in srgb, var(--success) 40%, var(--border));
+  background: var(--success-soft);
+}
+.ex-check {
+  cursor: pointer;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+.ex-check input {
+  display: none;
+}
+.ex-box {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 7px;
+  border: 2px solid var(--border);
+  background: var(--panel);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  transition: background 0.12s, border 0.12s;
+}
+.ex-item.done .ex-box {
+  background: var(--success);
+  border-color: var(--success);
+}
+.ex-body {
+  flex: 1;
+  min-width: 0;
+}
+.ex-text {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.ex-text .prose {
+  font-size: 14.5px;
+}
+.ex-text .prose p {
+  margin: 0;
+}
+.chip.adv {
+  color: var(--warning);
+  border-color: color-mix(in srgb, var(--warning) 35%, var(--border));
+  background: var(--warning-soft);
+}
+.ex-link-input {
+  width: 100%;
+  margin-top: 10px;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: var(--panel);
+  color: var(--text);
+  font-size: 13px;
+  font-family: var(--sans);
+  outline: none;
+}
+.ex-link-input:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
 /* graceful narrowing (desktop-first; keeps usable down to ~1000px) */
 @media (max-width: 1160px) {
   .lesson {

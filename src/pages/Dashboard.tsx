@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { reference } from "../content/reference";
+import { totalExercises } from "../content/exercises";
 import { cardIds } from "../data/cards";
 import { useStore } from "../lib/store";
 import { startOfDay } from "../lib/srs";
 import { dayKey } from "../lib/srs";
 import ProgressRing from "../components/ProgressRing";
+import LevelBar from "../components/LevelBar";
+import Achievements from "../components/Achievements";
+import ActivityHeatmap from "../components/ActivityHeatmap";
 
 function greeting(): string {
   const h = new Date().getHours();
@@ -32,15 +36,21 @@ export default function Dashboard() {
   // continue: first unread lesson in curriculum order (else first lesson)
   const nextLesson = lessons.find((s) => !state.progress[s.id]?.read) ?? lessons[0];
 
-  // surface the richer appendices as quick links (if present in the doc)
+  // surface the richer appendices + exercises as quick links (if present)
   const ap = reference.appendix;
   const findAp = (re: RegExp) => ap?.sections.find((s) => re.test(s.title));
-  const resources = [
-    { icon: "🧭", title: "Lộ trình & Onboarding", desc: "Chọn track theo vai trò", sec: findAp(/lộ trình|onboarding/i) },
-    { icon: "🧪", title: "Bài tập theo phần", desc: "Thực hành sau mỗi chương", sec: findAp(/bài tập/i) },
-    { icon: "🏆", title: "Capstone Project", desc: "Đồ án tổng kết", sec: findAp(/capstone/i) },
-    { icon: "🐞", title: "Bảng lỗi thường gặp", desc: "Tra cứu lỗi build & runtime", sec: findAp(/lỗi/i) },
-  ].filter((r) => r.sec);
+  const apTo = (re: RegExp) => {
+    const s = findAp(re);
+    return s ? `/reference?tab=${s.id}` : null;
+  };
+  const resources: { icon: string; title: string; desc: string; to: string }[] = [];
+  const roadmapTo = apTo(/lộ trình|onboarding/i);
+  if (roadmapTo) resources.push({ icon: "🧭", title: "Lộ trình & Onboarding", desc: "Chọn track theo vai trò", to: roadmapTo });
+  if (totalExercises > 0) resources.push({ icon: "🧪", title: "Bài tập thực hành", desc: "Làm & nộp link PR", to: "/exercises" });
+  const capstoneTo = apTo(/capstone/i);
+  if (capstoneTo) resources.push({ icon: "🏆", title: "Capstone Project", desc: "Đồ án tổng kết", to: capstoneTo });
+  const errorsTo = apTo(/lỗi/i);
+  if (errorsTo) resources.push({ icon: "🐞", title: "Bảng lỗi thường gặp", desc: "Tra cứu lỗi build & runtime", to: errorsTo });
 
   return (
     <div className="page narrow fade" style={{ padding: 0 }}>
@@ -62,6 +72,10 @@ export default function Dashboard() {
           </Link>
         </div>
       </section>
+
+      <div style={{ marginBottom: 20 }}>
+        <LevelBar xp={state.xp} />
+      </div>
 
       <div className="stat-grid" style={{ marginBottom: 24 }}>
         <div className="stat">
@@ -152,12 +166,20 @@ export default function Dashboard() {
         </div>
       </div>
 
+      <div style={{ marginTop: 30 }}>
+        <Achievements />
+      </div>
+
+      <div style={{ marginTop: 30 }}>
+        <ActivityHeatmap />
+      </div>
+
       {resources.length > 0 && (
         <section style={{ marginTop: 30 }}>
           <h2 className="section-title">Tài nguyên &amp; lộ trình</h2>
           <div className="part-cards">
             {resources.map((r) => (
-              <Link key={r.sec!.id} to={`/reference?tab=${r.sec!.id}`} className="card part-card">
+              <Link key={r.to} to={r.to} className="card part-card">
                 <div style={{ fontSize: 24, marginBottom: 8 }}>{r.icon}</div>
                 <div className="pc-title" style={{ margin: 0 }}>
                   {r.title}

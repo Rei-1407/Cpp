@@ -18,6 +18,11 @@ export interface DayActivity {
   lessons: number;
 }
 
+export interface ExerciseState {
+  done?: boolean;
+  link?: string;
+}
+
 export interface AppState {
   version: number;
   theme: Theme;
@@ -26,6 +31,7 @@ export interface AppState {
   activityByDay: Record<string, DayActivity>;
   progress: Record<string, SectionProgress>;
   srs: Record<string, SrsState>;
+  exercises: Record<string, ExerciseState>;
   dailyGoal: number;
 }
 
@@ -37,6 +43,7 @@ const DEFAULT_STATE: AppState = {
   activityByDay: {},
   progress: {},
   srs: {},
+  exercises: {},
   dailyGoal: 20,
 };
 
@@ -163,6 +170,18 @@ export const actions = {
       progress: { ...state.progress, [id]: { ...prev, practiceDone: true, updatedAt: Date.now() } },
     });
     addXp(10);
+  },
+
+  toggleExercise(id: string) {
+    const prev = state.exercises[id];
+    const done = !prev?.done;
+    set({ exercises: { ...state.exercises, [id]: { ...prev, done } } });
+    if (done) addXp(20);
+  },
+
+  setExerciseLink(id: string, link: string) {
+    const prev = state.exercises[id];
+    set({ exercises: { ...state.exercises, [id]: { ...prev, link } } });
   },
 
   /** Grade a flashcard in the daily review. */
